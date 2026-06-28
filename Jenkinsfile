@@ -29,8 +29,8 @@ pipeline {
                 // Usamos la imagen oficial de Docker de ZAP para atacar nuestra app en el puerto 5000
                 // Guardará un reporte HTML llamado zap_report.html en tu carpeta de proyecto
                 sh '''
-                docker run --rm -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
-                    -t http://localhost:5000 \
+                docker run --rm ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+                    -t http://172.17.0.1:5000 \
                     -r zap_report.html || true
                 '''
             }
