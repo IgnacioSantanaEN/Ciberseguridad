@@ -14,13 +14,10 @@ pipeline {
             steps {
                 echo 'Etapa 2: Desplegando el entorno de produccion...'
                 // Detiene y elimina contenedores anteriores si existen, y levanta el nuevo en el puerto 5000
-                sh '''
-                docker stop hola-mundo-container || true
-                docker rm hola-mundo-container || true
+                sh 'docker stop hola-mundo-container || true'
+                sh 'docker rm hola-mundo-container || true'
                 
-                docker run -d --name hola-mundo-container hola-mundo-prod:latest
-                sleep 3
-                '''
+                sh 'docker run -d --name hola-mundo-container hola-mundo-prod:latest'
             }
         }
 
