@@ -41,7 +41,7 @@ pipeline {
                     
                     withEnv(["TARGET_IP=${containerIp}","JK_WORKSPACE=${WORKSPACE}"]) {
                     	sh 'docker run --rm --user root -v $WORKSPACE:/zap/wrk/:rw -t ghcr.io:/zaproxy/zaproxy:stable zap-baseline.py -t http://$TARGET_IP:5000 -r reporte_zap.html || true'
-                    
+                    }
                 }
             }
         }
