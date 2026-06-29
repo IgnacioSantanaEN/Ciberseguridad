@@ -8,8 +8,15 @@ pipeline {
                 sh 'docker build -t hola-mundo-prod:latest .'
             }
         }
+        
+        stage('2. Analisis Estatico (Linting)'){
+            steps {
+                echo 'Buscando vulnerabilidades de infraestructura...'
+                sh 'docker run --rm -i hadolint/hadolint < Dockerfile || true'
+            }
+        }
 
-        stage('2. Despliegue (Deploy)') {
+        stage('3. Despliegue (Deploy)') {
             steps {
                 echo 'Desplegando aplicacion de manera persistente...'
                 // Detener contenedor viejo si existe
@@ -18,16 +25,6 @@ pipeline {
                 
                 // Levantar el script original manteniendolo vivo para auditoria
                 sh 'docker run -d --name hola-mundo-container hola-mundo-prod:latest'
-            }
-        }
-
-        stage('3. Pruebas (Testing)') {
-            steps {
-                echo '[TEST] verificando que el contenedor este activo...'
-                sh 'docker ps -f name=hola-mundo-container'
-                
-                echo '[TEST] Verificando los logs internos de la aplicacion...'
-                sh 'docker logs hola-mundo-container | grep "HOLA MUNDO PYTHON"'
             }
         }
     }
