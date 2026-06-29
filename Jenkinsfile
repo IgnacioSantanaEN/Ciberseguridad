@@ -39,9 +39,8 @@ pipeline {
                     def containerIp = sh(script: 'docker inspect --format="{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" hola-mundo-container', 			returnStdout: true).trim()
                     echo "Objetivo detectado en la IP: ${containerIp}"
                     
-                    def targetUrl = "http://${containerIp}:5000"
-                    
-                    sh "docker run --rm --user root -v \$(WORKSPACE):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t ${targetUrl} -r reporte_zap.html || true"
+                    withEnv(["TARGET_IP=${containerIp}","JK_WORKSPACE=${WORKSPACE}"]) {
+                    	sh 'docker run --rm --user root -v $WORKSPACE:/zap/wrk/:rw -t ghcr.io:/zaproxy/zaproxy:stable zap-baseline.py -t http://$TARGET_IP:5000 -r reporte_zap.html || true'
                     
                 }
             }
