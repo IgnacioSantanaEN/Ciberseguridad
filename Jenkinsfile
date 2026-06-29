@@ -39,11 +39,10 @@ pipeline {
                     def containerIp = sh(script: 'docker inspect --format="{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" hola-mundo-container', 			returnStdout: true).trim()
                     echo "Objetivo detectado en la IP: ${containerIp}"
                     
-                    sh 'chmod 777 .'
+                    def targetUrl = "http://${containerIp}:5000"
                     
-                    sh "docker run --rm -u root -v \$(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://'+ containerIp +':5000 -r reporte_zap.html || true"
+                    sh "docker run --rm -u root -v \$(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t ${targetUrl} -r reporte_zap.html || true"
                     
-                    sh 'chmod 755 .'
                 }
             }
         }
