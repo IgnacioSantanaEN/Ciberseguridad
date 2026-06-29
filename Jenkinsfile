@@ -41,7 +41,7 @@ pipeline {
                     
                     def targetUrl = "http://${containerIp}:5000"
                     
-                    sh "docker run --rm --user root -v \$(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t ${targetUrl} -r reporte_zap.html || true"
+                    sh "docker run --rm --user root -v \$(WORKSPACE):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t ${targetUrl} -r reporte_zap.html || true"
                     
                 }
             }
