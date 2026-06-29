@@ -36,12 +36,14 @@ pipeline {
                 
                 // 1. Obtenemos la IP real del contenedor para que OWASP sepa a dónde apuntar
                 script {
-                    def containerIp = sh(script: 'docker inspect --format="{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" hola-mundo-container', returnStdout: true).trim()
+                    def containerIp = sh(script: 'docker inspect --format="{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" hola-mundo-container', 			returnStdout: true).trim()
                     echo "Objetivo detectado en la IP: ${containerIp}"
                     
-                    // 2. Corremos OWASP ZAP en modo Baseline Scan contra nuestra aplicación.
-                    // Usamos || true para que si encuentra vulnerabilidades (alertas), el pipeline de Jenkins no se caiga y te deje ver el reporte.
+                    sh 'chmod 777 .'
+                    
                     sh "docker run --rm -v \$(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://${containerIp}:80 -r reporte_zap.html || true"
+                    
+                    sh 'chmod 755 .'
                 }
             }
         }
