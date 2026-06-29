@@ -12,7 +12,7 @@ pipeline {
         stage('2. Analisis Estatico (Linting)'){
             steps {
                 echo 'Buscando vulnerabilidades de infraestructura...'
-                sh 'docker run --rm -i hadolint/hadolint hadolint - < Dockerfile || true'
+                sh 'docker run --rm -v ${WORKSPACE}:/apps -w /apps hadolint/hadolint hadolint Dockerfile || true'
             }
         }
 
