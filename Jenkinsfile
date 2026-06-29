@@ -41,7 +41,7 @@ pipeline {
                     
                     sh 'chmod 777 .'
                     
-                    sh "docker run --rm -v \$(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://${containerIp}:80 -r reporte_zap.html || true"
+                    sh "docker run --rm -u root -v \$(pwd):/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://${containerIp}:5000 -r reporte_zap.html || true"
                     
                     sh 'chmod 755 .'
                 }
